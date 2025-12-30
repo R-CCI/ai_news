@@ -1,46 +1,42 @@
-# emailer.py
+# emailer.py (Versión SendGrid - Funciona en Cloud Run)
 import os
-from dotenv import load_dotenv
-from redmail import gmail
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 import logging
-
-# Load environment variables from .env file
-load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-# Fetch credentials from environment variables
-username = "ymejia@cci.com.do"
-password = "dlpf vvwd smff rsij"
-
-if not username or not password:
-    logger.error("❌ Credentials missing. Please check your .env file.")
-
-# Configure Redmail
-gmail.username = username
-gmail.password = password
-
-# Gmail SSL Configuration (Port 465)
-gmail.smtp_host = "smtp.gmail.com"
-gmail.smtp_port = 587
-gmail.smtp_use_ssl = False  # Apagar SSL implícito
-gmail.smtp_use_tls = True   # Encender STARTTLS
-
+# Configura tu API KEY (Obtenida de SendGrid)
+# NO pongas la clave directamente aquí, usa variables de entorno en Cloud Run
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+SENDER_EMAIL = "ymejia@cci.com.do"  # Tu correo corporativo verificado
 
 def send_email(to: list[str], subject: str, html: str):
     """
-    Sends email using Gmail and Redmail via SSL.
+    Envía email usando la API de SendGrid (Estándar para Cloud Run).
     """
-    try:
-        logger.info(f"Attempting to send email to {to}")
+    if not SENDGRID_API_KEY:
+        logger.error("❌ Falta la SENDGRID_API_KEY. Configura la variable de entorno.")
+        raise Exception("SendGrid API Key missing")
 
-        gmail.send(
-            subject=subject,
-            receivers=to,
-            html=html,
-            sender=f"AI Market Newsletter <{gmail.username}>"
-        )
-        logger.info("✅ Email sent successfully")
+    message = Mail(
+        from_email=SENDER_EMAIL,
+        to_emails=to,
+        subject=subject,
+        html_content=html
+    )
+
+    try:
+        logger.info(f"Intentando enviar email a {to} vía SendGrid...")
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        
+        # SendGrid devuelve 202 (Accepted) cuando todo está bien
+        if response.status_code in [200, 201, 202]:
+            logger.info(f"✅ Email enviado correctamente. Status: {response.status_code}")
+        else:
+            logger.error(f"⚠️ SendGrid respondió con error: {response.status_code}")
+            
     except Exception as e:
-        logger.error(f"❌ Error sending email: {e}")
+        logger.error(f"❌ Error enviando email con SendGrid: {e}")
         raise e
