@@ -11,4 +11,4 @@ EXPOSE 80
 
 ENTRYPOINT ["poetry", "run", "streamlit", "run"]
 
-CMD ["bible_react/main.py"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
