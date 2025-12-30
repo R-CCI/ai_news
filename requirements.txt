@@ -28,3 +28,9 @@ pypdf
 sentence-transformers
 torch
 openpyxl
+fastapi
+uvicorn[standard]
+google-cloud-bigquery
+google-cloud-secret-manager
+requests
+markdown
