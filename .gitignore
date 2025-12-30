@@ -1,0 +1,81 @@
+# ================================
+# Python
+# ================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.env
+.venv/
+venv/
+ENV/
+
+# ================================
+# IDEs / Editors
+# ================================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ================================
+# OS files
+# ================================
+.DS_Store
+Thumbs.db
+
+# ================================
+# Logs & temp files
+# ================================
+*.log
+logs/
+tmp/
+.cache/
+
+# ================================
+# Jupyter / Notebooks
+# ================================
+.ipynb_checkpoints/
+
+# ================================
+# Secrets & credentials
+# ================================
+.env
+.env.*
+*.pem
+*.key
+*.json
+
+# Google Cloud credentials
+**/service-account.json
+**/gcloud-key.json
+
+# ================================
+# Build / Docker
+# ================================
+dist/
+build/
+*.whl
+.dockerignore
+
+# ================================
+# LangChain / LLM artifacts
+# ================================
+langchain_cache/
+.llm_cache/
+
+# ================================
+# BigQuery / local data
+# ================================
+*.parquet
+*.csv
+data/
+
+# ================================
+# Coverage / testing
+# ================================
+.coverage
+htmlcov/
+.pytest_cache/
